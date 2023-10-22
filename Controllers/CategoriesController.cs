@@ -12,35 +12,35 @@ namespace web_api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoriesController : ControllerBase
+    public class CategoryController : ControllerBase
     {
         private readonly MyDbContext _context;
 
-        public CategoriesController(MyDbContext context)
+        public CategoryController(MyDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Categories
+        // GET: api/Category
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> Getcategories()
+        public async Task<ActionResult<IEnumerable<Category>>> GetCategory()
         {
-          if (_context.categories == null)
+          if (_context.Category == null)
           {
               return NotFound();
           }
-            return await _context.categories.ToListAsync();
+            return await _context.Category.ToListAsync();
         }
 
-        // GET: api/Categories/5
+        // GET: api/Category/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Category>> GetCategory(int id)
         {
-          if (_context.categories == null)
+          if (_context.Category == null)
           {
               return NotFound();
           }
-            var category = await _context.categories.FindAsync(id);
+            var category = await _context.Category.FindAsync(id);
 
             if (category == null)
             {
@@ -50,11 +50,18 @@ namespace web_api.Controllers
             return category;
         }
 
-        // PUT: api/Categories/5
+        // PUT: api/Category/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCategory(int id, Category category)
+        public async Task<IActionResult> PutCategory(int id, CategoryModel model)
         {
+            var category = new Category
+            {
+                CategoryId = id,
+                name = model.name,
+                path = model.path,
+            };
+
             if (id != category.CategoryId)
             {
                 return BadRequest();
@@ -81,14 +88,14 @@ namespace web_api.Controllers
             return NoContent();
         }
 
-        // POST: api/Categories
+        // POST: api/Category
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<CategoryModel>> PostCategory(CategoryModel model)
         {
-          if (_context.categories == null)
+          if (_context.Category == null)
           {
-              return Problem("Entity set 'MyDbContext.categories'  is null.");
+              return Problem("Entity set 'MyDbContext.Category'  is null.");
           }
 
             var category = new Category
@@ -96,27 +103,27 @@ namespace web_api.Controllers
                 name = model.name,
                 path = model.path,
             };
-            _context.categories.Add(category);
+            _context.Category.Add(category);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetCategory", new { id = category.CategoryId }, category);
         }
 
-        // DELETE: api/Categories/5
+        // DELETE: api/Category/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
-            if (_context.categories == null)
+            if (_context.Category == null)
             {
                 return NotFound();
             }
-            var category = await _context.categories.FindAsync(id);
+            var category = await _context.Category.FindAsync(id);
             if (category == null)
             {
                 return NotFound();
             }
 
-            _context.categories.Remove(category);
+            _context.Category.Remove(category);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -124,7 +131,7 @@ namespace web_api.Controllers
 
         private bool CategoryExists(int id)
         {
-            return (_context.categories?.Any(e => e.CategoryId == id)).GetValueOrDefault();
+            return (_context.Category?.Any(e => e.CategoryId == id)).GetValueOrDefault();
         }
     }
 }
