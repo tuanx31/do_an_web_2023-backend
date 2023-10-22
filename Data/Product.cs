@@ -11,7 +11,7 @@ namespace web_api.Data
         [Required]
         public string name { get; set; } = "";
         [Required]
-        public string description { get; set; } = "";
+        public string? description { get; set; }
 
         [Range(0, double.MaxValue)]
         public double price { get; set; }

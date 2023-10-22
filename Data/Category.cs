@@ -11,6 +11,6 @@ namespace web_api.Data
         [Required]
         public string path { get; set; } = "";
 
-        public virtual ICollection <Product> products { get; set; }
+        public ICollection <Product> products { get; set; }
     }
 }
