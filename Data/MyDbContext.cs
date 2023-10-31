@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using web_api.Data;
 
 namespace web_api.Data
 {
@@ -8,5 +9,6 @@ namespace web_api.Data
 
         public DbSet<Product> products { get; set; }
         public DbSet<Category> Category { get; set; }
+        public DbSet<web_api.Data.Trademark>? Trademark { get; set; }
     }
 }

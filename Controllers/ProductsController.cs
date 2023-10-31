@@ -64,6 +64,14 @@ namespace web_api.Controllers
                 price = model.price,
                 img = model.img,
                 sale_of = model.sale_of,
+                color = model.color,
+                consistent = model.consistent,
+                design = model.design,
+                id_trademark = model.id_trademark,
+                listImage = model.listImage,
+                Material = model.Material,
+                quantity = model.quantity,
+                size = model.size,
 
             };
             if (id != product.id)
@@ -111,6 +119,14 @@ namespace web_api.Controllers
                 price = model.price,
                 img = model.img,
                 sale_of = model.sale_of,
+                color = model.color,
+                consistent = model.consistent,
+                design = model.design,
+                id_trademark = model.id_trademark,
+                listImage = model.listImage,
+                Material = model.Material,
+                quantity = model.quantity,
+                size = model.size,
                 
             };
             _context.products.Add(product);

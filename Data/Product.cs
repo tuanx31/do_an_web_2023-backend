@@ -20,10 +20,28 @@ namespace web_api.Data
 
         public byte sale_of { get; set; }
 
+        public string design { get; set; } = "";
+
+        public string Material { get; set; } = "";
+
+        public string consistent { get; set; } = "";
+
+        public int quantity { get; set; }
+
+        public string color { get; set; } = "";
+
+        public string size { get; set; } = "";
+
+        public string listImage { get; set; } = "";
 
         public int? id_category { get; set; }
 
         [ForeignKey("id_category")]
         public Category categories { get; set; }
+
+        public int? id_trademark { get; set; }
+
+        [ForeignKey("id_trademark")]
+        public Trademark trademarks { get; set; }
     }
 }
