@@ -10,7 +10,6 @@ namespace web_api.Data
 
         [Required]
         public string name { get; set; } = "";
-        [Required]
         public string? description { get; set; }
 
         [Range(0, double.MaxValue)]
@@ -37,11 +36,18 @@ namespace web_api.Data
         public int? id_category { get; set; }
 
         [ForeignKey("id_category")]
-        public Category categories { get; set; }
+        public Category? categories { get; set; }
 
         public int? id_trademark { get; set; }
 
         [ForeignKey("id_trademark")]
-        public Trademark trademarks { get; set; }
+        public Trademark? trademarks { get; set; }
+
+
+        [NotMapped]
+        public IFormFile? ImageFile { get; set; }
+
+        [NotMapped]
+        public IFormFileCollection? listImageFile { get; set; }
     }
 }

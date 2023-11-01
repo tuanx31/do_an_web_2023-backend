@@ -8,13 +8,10 @@ namespace web_api.Models
     {
         [Required]
         public string name { get; set; } = "";
-        [Required]
         public string? description { get; set; }
 
         [Range(0, double.MaxValue)]
         public double price { get; set; }
-
-        public string img { get; set; } = "";
 
         public byte sale_of { get; set; }
 
@@ -30,9 +27,15 @@ namespace web_api.Models
 
         public string size { get; set; } = "";
 
-        public string listImage { get; set; } = "";
-
         public int? id_category { get; set; }
         public int? id_trademark { get; set; }
+
+        [NotMapped]
+
+        public IFormFile? ImageFile { get; set; }
+
+        [NotMapped]
+
+        public IFormFileCollection? listImageFile { get; set; }
     }
 }

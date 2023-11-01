@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using web_api.Data;
+using web_api.Reponsitory.Abastract;
+using web_api.Reponsitory.Implementation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +27,9 @@ builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
 builder.Services.AddDbContext<MyDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("MyDb")));
 
+
+builder.Services.AddTransient<IFileService,FileService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -33,6 +39,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 
 }
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+           Path.Combine(builder.Environment.ContentRootPath, "Uploads")),
+    RequestPath = "/Resources"
+});
+
 app.UseCors("corsapp");
 
 app.UseHttpsRedirection();

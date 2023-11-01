@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using web_api.Data;
 using web_api.Models;
+using web_api.Reponsitory.Abastract;
 
 namespace web_api.Controllers
 {
@@ -16,10 +17,14 @@ namespace web_api.Controllers
     {
         private readonly MyDbContext _context;
 
-        public ProductsController(MyDbContext context)
+        private IFileService _fileService;
+
+        public ProductsController(MyDbContext context, IFileService fileService)
         {
             _context = context;
+            _fileService = fileService;
         }
+
 
         // GET: api/Products
         [HttpGet]
@@ -62,13 +67,11 @@ namespace web_api.Controllers
                 id_category = model.id_category,
                 description = model.description,
                 price = model.price,
-                img = model.img,
                 sale_of = model.sale_of,
                 color = model.color,
                 consistent = model.consistent,
                 design = model.design,
                 id_trademark = model.id_trademark,
-                listImage = model.listImage,
                 Material = model.Material,
                 quantity = model.quantity,
                 size = model.size,
@@ -104,8 +107,9 @@ namespace web_api.Controllers
         // POST: api/Products
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ProductModel>> PostProduct(ProductModel model)
+        public async Task<ActionResult<ProductModel>> PostProduct([FromForm]ProductModel model)
         {
+
           if (_context.products == null)
           {
               return Problem("Entity set 'MyDbContext.products'  is null.");
@@ -117,18 +121,39 @@ namespace web_api.Controllers
                 id_category = model.id_category,
                 description = model.description,
                 price = model.price,
-                img = model.img,
                 sale_of = model.sale_of,
                 color = model.color,
                 consistent = model.consistent,
                 design = model.design,
                 id_trademark = model.id_trademark,
-                listImage = model.listImage,
+                listImage = "",
                 Material = model.Material,
                 quantity = model.quantity,
                 size = model.size,
-                
             };
+
+            if (model.ImageFile != null)
+            {
+                var fileResult = _fileService.SaveImage(model.ImageFile);
+                if (fileResult.Item1 == 1)
+                {
+                    product.img = fileResult.Item2;
+                }
+            }
+
+            if (model.listImageFile != null)
+            {
+                var fileResult = _fileService.SaveMultiImage(model.listImageFile);
+                if (fileResult.Item1 == 1)
+                {
+                    foreach (var item in fileResult.Item2)
+                    {
+                        product.listImage += item + "|";
+                    }
+                    
+                }
+            }
+
             _context.products.Add(product);
             await _context.SaveChangesAsync();
 
@@ -148,6 +173,19 @@ namespace web_api.Controllers
             {
                 return NotFound();
             }
+
+            string[] stringArray = product.listImage.Split('|');
+
+            stringArray = new ArraySegment<string>(stringArray, 0, stringArray.Length - 1).ToArray();
+
+            // stringArray bây giờ chứa mảng các chuỗi
+            foreach (var item in stringArray)
+            {
+
+                _fileService.DeleteImage(item);
+            }
+
+            _fileService.DeleteImage(product.img);
 
             _context.products.Remove(product);
             await _context.SaveChangesAsync();

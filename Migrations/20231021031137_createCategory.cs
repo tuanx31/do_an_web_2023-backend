@@ -14,7 +14,7 @@ namespace web_api.Migrations
                 name: "id_category",
                 table: "products",
                 type: "int",
-                nullable: true);
+                nullable: false);
 
             migrationBuilder.CreateTable(
                 name: "Category",
