@@ -15,6 +15,7 @@ namespace web_api.Data
         [Range(0, double.MaxValue)]
         public double price { get; set; }
 
+        public bool hot { get; set; }
         public string img { get; set; } = "";
 
         public byte sale_of { get; set; }
@@ -32,6 +33,8 @@ namespace web_api.Data
         public string size { get; set; } = "";
 
         public string listImage { get; set; } = "";
+
+        public DateTime createAt { get; set; }
 
         public int? id_category { get; set; }
 

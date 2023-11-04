@@ -15,6 +15,8 @@ namespace web_api.Models
 
         public byte sale_of { get; set; }
 
+        public bool hot { get; set; } = false;
+
         public string design { get; set; } = "";
 
         public string Material { get; set; } = "";

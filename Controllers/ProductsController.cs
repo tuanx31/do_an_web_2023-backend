@@ -118,6 +118,7 @@ namespace web_api.Controllers
             var product = new Product
             {
                 name = model.name,
+                hot = model.hot,
                 id_category = model.id_category,
                 description = model.description,
                 price = model.price,
@@ -130,6 +131,7 @@ namespace web_api.Controllers
                 Material = model.Material,
                 quantity = model.quantity,
                 size = model.size,
+                createAt = DateTime.Now,
             };
 
             if (model.ImageFile != null)
