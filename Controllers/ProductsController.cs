@@ -55,7 +55,7 @@ namespace web_api.Controllers
             return product;
         }
         [HttpGet("productbycategory/{id}")]
-        public async Task<ActionResult<Product>> GetCategorybyCategory(int id)
+        public async Task<ActionResult<Product>> GetProductbyCategory(int id)
         {
             if (_context.products == null)
             {
@@ -69,7 +69,21 @@ namespace web_api.Controllers
             }
             return Ok(result);
         }
+        [HttpGet("hotproduct")]
+        public async Task<ActionResult<Product>> GetHotProduct()
+        {
+            if (_context.products == null)
+            {
+                return NotFound();
+            }
+            var result = await _context.products.Include(p => p.categories).Include(p => p.trademarks).Where(p => p.hot == true).ToListAsync();
 
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
 
         // PUT: api/Products/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
