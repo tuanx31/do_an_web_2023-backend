@@ -6,11 +6,9 @@ namespace web_api.Models
 {
     public class ProductModel
     {
-        [Required]
         public string name { get; set; } = "";
         public string? description { get; set; }
 
-        [Range(0, double.MaxValue)]
         public double price { get; set; }
 
         public byte sale_of { get; set; }
@@ -39,5 +37,10 @@ namespace web_api.Models
         [NotMapped]
 
         public IFormFileCollection? listImageFile { get; set; }
+    }
+    public class HangHoaModel
+    {
+        public string name { get; set; } = "";
+        public string tenloai { get; set; }
     }
 }

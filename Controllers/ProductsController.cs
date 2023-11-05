@@ -33,8 +33,8 @@ namespace web_api.Controllers
           if (_context.products == null)
           {
               return NotFound();
-          }
-            return await _context.products.ToListAsync();
+          }   
+            return await _context.products.Include(h => h.categories).Include(h=>h.trademarks).ToListAsync();
         }
 
         // GET: api/Products/5
@@ -45,25 +45,42 @@ namespace web_api.Controllers
           {
               return NotFound();
           }
-            var product = await _context.products.FindAsync(id);
+            var product = await _context.products.Include(h => h.categories).Include(h => h.trademarks).Where(p => p.id == id).FirstOrDefaultAsync();
 
             if (product == null)
             {
                 return NotFound();
             }
-
+            
             return product;
         }
+        [HttpGet("productbycategory/{id}")]
+        public async Task<ActionResult<Product>> GetCategorybyCategory(int id)
+        {
+            if (_context.products == null)
+            {
+                return NotFound();
+            }
+            var result = await _context.products.Include(p=>p.categories).Include(p=>p.trademarks).Where(p => p.id_category == id).ToListAsync();
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+
 
         // PUT: api/Products/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduct(int id, ProductModel model)
+        public async Task<IActionResult> PutProduct([FromForm]int id, ProductModel model)
         {
             var product = new Product
             {
-                id = id,
+                id= id,
                 name = model.name,
+                hot = model.hot,
                 id_category = model.id_category,
                 description = model.description,
                 price = model.price,
@@ -72,16 +89,39 @@ namespace web_api.Controllers
                 consistent = model.consistent,
                 design = model.design,
                 id_trademark = model.id_trademark,
+                listImage = "",
                 Material = model.Material,
                 quantity = model.quantity,
                 size = model.size,
-
+                createAt = DateTime.Now,
             };
+
+            
+            if (model.ImageFile != null)
+            {
+                var fileResult = _fileService.SaveImage(model.ImageFile);
+                if (fileResult.Item1 == 1)
+                {
+                    product.img = fileResult.Item2;
+                }
+            }
+
+            if (model.listImageFile != null)
+            {
+                var fileResult = _fileService.SaveMultiImage(model.listImageFile);
+                if (fileResult.Item1 == 1)
+                {
+                    foreach (var item in fileResult.Item2)
+                    {
+                        product.listImage += item + "|";
+                    }
+
+                }
+            }
             if (id != product.id)
             {
                 return BadRequest();
             }
-
 
             _context.Entry(product).State = EntityState.Modified;
 
