@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol.Core.Types;
 using web_api.Data;
 using web_api.Models;
 using web_api.Reponsitory.Abastract;
@@ -36,7 +37,18 @@ namespace web_api.Controllers
           }   
             return await _context.products.Include(h => h.categories).Include(h=>h.trademarks).ToListAsync();
         }
-
+        [HttpGet("newproduct")]
+        public async Task<ActionResult<IEnumerable<Product>>> GetNewproducts()
+        {
+            if (_context.products == null)
+            {
+                return NotFound();
+            }
+            var product = await _context.products.Include(h => h.categories).Include(h => h.trademarks).OrderByDescending(p =>p.createAt).ToListAsync();
+            var productLimit = product.Take(4);// limit
+            //var pagedProductQuery = productQuery.Skip(25 * page).Take(25) // paging
+            return Ok(productLimit);
+        }
         // GET: api/Products/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
