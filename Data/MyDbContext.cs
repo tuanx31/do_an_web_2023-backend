@@ -9,5 +9,7 @@ namespace web_api.Data
         public DbSet<Product> products { get; set; }
         public DbSet<Category> Category { get; set; }
         public DbSet<Trademark> Trademark { get; set; }
+        public DbSet<Order> Order { get; set; }
+        public DbSet<OrderDetail> OrderDetail { get; set; }
     }
 }

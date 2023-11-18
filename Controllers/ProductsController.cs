@@ -66,6 +66,23 @@ namespace web_api.Controllers
             
             return product;
         }
+
+        [HttpGet("/search/{keywork}")]
+        public async Task<ActionResult<Product>> SearchProduct(string keywork)
+        {
+            if (_context.products == null)
+            {
+                return NotFound();
+            }
+            var result = await _context.products.Include(p => p.categories).Include(p => p.trademarks).Where(p => p.name.Contains(keywork)).ToListAsync();
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+
+        }
+
         [HttpGet("productbycategory/{id}")]
         public async Task<ActionResult<Product>> GetProductbyCategory(int id)
         {
