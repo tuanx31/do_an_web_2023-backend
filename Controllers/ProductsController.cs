@@ -67,7 +67,7 @@ namespace web_api.Controllers
             return product;
         }
 
-        [HttpGet("/search/{keywork}")]
+        [HttpGet("search/{keywork}")]
         public async Task<ActionResult<Product>> SearchProduct(string keywork)
         {
             if (_context.products == null)
