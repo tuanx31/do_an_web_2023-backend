@@ -1,5 +1,9 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using web_api.Data;
 using web_api.Reponsitory.Abastract;
 using web_api.Reponsitory.Implementation;
@@ -22,7 +26,25 @@ builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
     builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
 }));
 
-
+builder.Services.AddIdentity<ApplicationUser,IdentityRole>().AddEntityFrameworkStores<MyDbContext>().AddDefaultTokenProviders();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.SaveToken = true;
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuer = true,  
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["JWT:ValidAudience"],
+        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"])),
+    };
+});
 //Depenentcy Injection DbContext Class
 builder.Services.AddDbContext<MyDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("MyDb")));
@@ -30,7 +52,7 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("MyDb")));
 
 builder.Services.AddTransient<IFileService,FileService>();
 builder.Services.AddScoped<IProductservice,ProductService>();
-
+builder.Services.AddScoped<IAccountService,AccountService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
