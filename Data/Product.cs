@@ -39,12 +39,12 @@ namespace web_api.Data
         public int? id_category { get; set; }
 
         [ForeignKey("id_category")]
-        public Category categories { get; set; }
+        public Category? categories { get; set; }
 
         public int? id_trademark { get; set; }
 
         [ForeignKey("id_trademark")]
-        public Trademark trademarks { get; set; }
+        public Trademark? trademarks { get; set; }
 
 
         [NotMapped]

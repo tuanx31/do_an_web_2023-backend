@@ -11,5 +11,10 @@ namespace web_api.Data
         public DbSet<Trademark> Trademark { get; set; }
         public DbSet<Order> Order { get; set; }
         public DbSet<OrderDetail> OrderDetail { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Group> Groups { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Group_role> GroupRoles { get; set; }
+
     }
 }
