@@ -26,16 +26,23 @@ namespace web_api.Reponsitory.Implementation
         }
         public async Task<string> SignInAsync(SignInModel model)
         {
+            var user = await userManager.FindByNameAsync(model.Email);
             var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
             if (!result.Succeeded)
             {
                 return string.Empty;
             }
+            var userRole = await userManager.GetRolesAsync(user);
             var authClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, model.Email),
-                new Claim(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                
             };
+            foreach (var item in userRole)
+            {
+                authClaims.Add(new Claim(ClaimTypes.Role, item));
+            }
 
             var authenKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]));
 
