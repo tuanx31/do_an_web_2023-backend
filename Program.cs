@@ -74,7 +74,7 @@ app.UseStaticFiles(new StaticFileOptions
 app.UseCors("corsapp");
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseRouting();
 
 app.UseAuthorization();

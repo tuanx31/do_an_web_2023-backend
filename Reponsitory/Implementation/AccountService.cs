@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
+using NuGet.Common;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using web_api.Data;
 using web_api.Models;
 using web_api.Reponsitory.Abastract;
-
+    
 namespace web_api.Reponsitory.Implementation
 {
     public class AccountService : IAccountService
@@ -31,17 +32,19 @@ namespace web_api.Reponsitory.Implementation
             var authClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, model.Email),
-                new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
-            var authKey = new SymmetricSecurityKey( Encoding.UTF8.GetBytes(configuration["JWT:Secret"]));
-            var Token = new JwtSecurityToken(
-                issuer : configuration["JWT:ValidIssuer"],
+
+            var authenKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]));
+
+            var token = new JwtSecurityToken(
+                issuer: configuration["JWT:ValidIssuer"],
                 audience: configuration["JWT:ValidAudience"],
-                expires:DateTime.Now.AddDays(1),
-                claims:authClaims,
-                signingCredentials : new SigningCredentials(authKey , SecurityAlgorithms.HmacSha512Signature)
-                );
-            return new JwtSecurityTokenHandler().WriteToken(Token);
+                expires: DateTime.Now.AddMinutes(20),
+                claims: authClaims,
+                signingCredentials: new SigningCredentials(authenKey, SecurityAlgorithms.HmacSha512Signature)
+            );
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         public async Task<IdentityResult> SignUpAsync(SignUpModel model)
