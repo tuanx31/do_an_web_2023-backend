@@ -16,11 +16,13 @@ namespace web_api.Reponsitory.Implementation
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly IConfiguration configuration;
+        private readonly RoleManager<IdentityRole> roleManager;
 
-        public AccountService(UserManager<ApplicationUser> userManager , SignInManager<ApplicationUser> signInManager ,IConfiguration configuration) {
-        this.userManager = userManager; 
+        public AccountService(UserManager<ApplicationUser> userManager , SignInManager<ApplicationUser> signInManager ,IConfiguration configuration , RoleManager<IdentityRole> roleManager) {
+            this.userManager = userManager; 
             this.signInManager = signInManager;
             this.configuration = configuration;
+            this.roleManager = roleManager; 
         }
         public async Task<string> SignInAsync(SignInModel model)
         {
@@ -57,7 +59,11 @@ namespace web_api.Reponsitory.Implementation
                 PhoneNumber = model.PhoneNumber,
        
             };
-            return await userManager.CreateAsync(user, model.Password);
+            //if(await roleManager.RoleExistsAsync("User"))
+            //{
+            var result = await userManager.CreateAsync(user, model.Password);
+            await userManager.AddToRoleAsync(user, "User");
+            return result;
         }
     }
 }
