@@ -24,15 +24,21 @@ namespace web_api.Reponsitory.Implementation
             this.configuration = configuration;
             this.roleManager = roleManager; 
         }
-        public async Task<string> SignInAsync(SignInModel model)
+        public async Task<Tuple<string, AccountModel>> SignInAsync(SignInModel model)
         {
             var user = await userManager.FindByNameAsync(model.Email);
+            var userRole = await userManager.GetRolesAsync(user);
+            var accountmodel = new AccountModel() { 
+                email = user.Email,
+                name = user.name,
+                phoneNumber = user.PhoneNumber,
+                groupname = userRole[0],
+            };
             var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
             if (!result.Succeeded)
             {
-                return string.Empty;
+                return Tuple.Create( string.Empty, accountmodel);
             }
-            var userRole = await userManager.GetRolesAsync(user);
             var authClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, model.Email),
@@ -53,7 +59,8 @@ namespace web_api.Reponsitory.Implementation
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authenKey, SecurityAlgorithms.HmacSha512Signature)
             );
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            var tokens = new JwtSecurityTokenHandler().WriteToken(token);
+            return Tuple.Create(tokens, accountmodel);
         }
 
         public async Task<IdentityResult> SignUpAsync(SignUpModel model)

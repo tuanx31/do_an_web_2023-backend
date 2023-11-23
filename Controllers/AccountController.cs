@@ -32,7 +32,7 @@ namespace web_api.Controllers
         public async Task<IActionResult> signIn(SignInModel model)
         {
             var result = await accountRepo.SignInAsync(model);
-            if (string.IsNullOrEmpty(result))
+            if (string.IsNullOrEmpty(result.Item1))
             {
                 return Unauthorized();
             }
