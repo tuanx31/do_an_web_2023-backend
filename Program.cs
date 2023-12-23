@@ -51,7 +51,6 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("MyDb")));
 
 
 builder.Services.AddTransient<IFileService,FileService>();
-builder.Services.AddScoped<IProductservice,ProductService>();
 builder.Services.AddScoped<IAccountService,AccountService>();
 var app = builder.Build();
 
