@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using web_api.Data;
 using web_api.Models;
+using web_api.Reponsitory.Abastract;
 
 namespace web_api.Controllers
 {
@@ -16,9 +17,11 @@ namespace web_api.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly MyDbContext _context;
+        private readonly IAccountService accountRepo;
 
-        public OrdersController(MyDbContext context)
+        public OrdersController(MyDbContext context , IAccountService repo)
         {
+            accountRepo = repo;
             _context = context;
         }
 
@@ -30,7 +33,7 @@ namespace web_api.Controllers
           {
               return NotFound();
           }
-            return await _context.Order.ToListAsync();
+            return await _context.Order.Include(o => o.User).ToListAsync();
         }
 
         // GET: api/Orders/5
@@ -87,21 +90,24 @@ namespace web_api.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
 
-        public async Task<ActionResult<OrderModel>> PostOrder(OrderModel model)
+        public async Task<ActionResult<OrderModel>> PostOrder(string email ,OrderModel model)
         {
           if (_context.Order == null)
           {
               return Problem("Entity set 'MyDbContext.Order'  is null.");
           }
+            var id = await accountRepo.getIDbyMail(email);
+            if ( id == string.Empty)
+            {
+                return BadRequest();
+            }
             var order = new Order()
             {
                 address = model.address,
-                emailCustomer = model.emailCustomer,
-                nameCustomer = model.nameCustomer,
                 note = model.note,
-                phoneCustomer = model.phoneCustomer,
                 total = model.total,
                 createAt = DateTime.Now,
+                idUser = id,
             };
             _context.Order.Add(order);
             await _context.SaveChangesAsync();

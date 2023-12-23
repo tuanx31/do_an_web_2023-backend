@@ -2,6 +2,7 @@
 
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace web_api.Data
 {
@@ -11,12 +12,10 @@ namespace web_api.Data
         public int Id { get; set; }
         
         public string note { get; set; }
+        public string idUser { get; set; }
+        [ForeignKey("idUser")]
+        public ApplicationUser User { get; set; }
 
-        public string? nameCustomer { get; set; }
-
-        public string? emailCustomer { get; set; }
-
-        public string? phoneCustomer {  get; set; }
         
         public string? address { get; set; }
 

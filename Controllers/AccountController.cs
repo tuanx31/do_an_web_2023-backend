@@ -38,7 +38,12 @@ namespace web_api.Controllers
             }
             return Ok(result);
         }
-
+        //[HttpPost("getId")]
+        //public async Task<IActionResult> getIdbyEmail (string id)
+        //{
+        //    var result = await accountRepo.getIDbyMail(id);
+        //    return Ok(result);
+        //}
 
     }
 }

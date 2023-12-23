@@ -24,6 +24,18 @@ namespace web_api.Reponsitory.Implementation
             this.configuration = configuration;
             this.roleManager = roleManager; 
         }
+
+        public async Task<string> getIDbyMail(string email)
+        {
+            var user = await userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return string.Empty;
+            }
+            return user.Id;
+            
+        }
+
         public async Task<Tuple<string, AccountModel>> SignInAsync(SignInModel model)
         {
             var user = await userManager.FindByNameAsync(model.Email);
