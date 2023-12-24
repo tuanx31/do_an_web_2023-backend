@@ -44,14 +44,14 @@ namespace web_api.Controllers
           {
               return NotFound();
           }
-            var order = await _context.Order.FindAsync(id);
+            var order = await _context.Order.Include(o=>o.User).Where(o => o.Id == id).FirstOrDefaultAsync();
 
             if (order == null)
             {
                 return NotFound();
             }
 
-            return order;
+            return Ok(order);
         }
 
         // PUT: api/Orders/5
