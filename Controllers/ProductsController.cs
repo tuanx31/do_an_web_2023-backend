@@ -30,13 +30,17 @@ namespace web_api.Controllers
 
         // GET: api/Products
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> Getproducts()
+        public async Task<ActionResult<IEnumerable<Product>>> Getproducts(int page)
         {
           if (_context.products == null)
           {
               return NotFound();
           }   
-            return await _context.products.Include(h => h.categories).Include(h=>h.trademarks).ToListAsync();
+             var totalItem = await _context.products.CountAsync();
+            var product = await _context.products.Include(h => h.categories).Include(h=>h.trademarks).ToListAsync();
+            var totalPage = (int)Math.Ceiling(totalItem / 20.0);
+            var data = product.Skip(20 * (page-1)).Take(20); // paging
+            return Ok(new { totalPage,data });
         }
         [HttpGet("newproduct")]
         public async Task<ActionResult<IEnumerable<Product>>> GetNewproducts()
@@ -46,7 +50,7 @@ namespace web_api.Controllers
                 return NotFound();
             }
             var product = await _context.products.Include(h => h.categories).Include(h => h.trademarks).OrderByDescending(p =>p.createAt).ToListAsync();
-            var productLimit = product.Take(4);// limit
+            var productLimit = product.Take(20);// limit
             //var pagedProductQuery = productQuery.Skip(25 * page).Take(25) // paging
             return Ok(productLimit);
         }
