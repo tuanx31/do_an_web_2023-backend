@@ -53,7 +53,27 @@ namespace web_api.Controllers
 
             return Ok(order);
         }
+        [HttpGet("emailUser/{email}")]
+        public async Task<ActionResult<Order>> GetOrderbyemailUser(string email)
+        {
+            if (_context.Order == null)
+            {
+                return NotFound();
+            }
+            var id = accountRepo.getIDbyMail(email);
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var order = await _context.Order.Where(o => o.idUser == id.Result).ToListAsync();
 
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(order);
+        }
         // PUT: api/Orders/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
