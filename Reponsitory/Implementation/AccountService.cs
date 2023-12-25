@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using NuGet.Common;
@@ -23,6 +24,13 @@ namespace web_api.Reponsitory.Implementation
             this.signInManager = signInManager;
             this.configuration = configuration;
             this.roleManager = roleManager; 
+        }
+
+        public Task<List<ApplicationUser>> GetAllAccount()
+        {
+            if (userManager == null) throw new ArgumentNullException();
+            var user = userManager.Users.ToListAsync();
+            return user;
         }
 
         public async Task<string> getIDbyMail(string email)

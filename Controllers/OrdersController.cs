@@ -27,6 +27,7 @@ namespace web_api.Controllers
 
         // GET: api/Orders
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrder()
         {
           if (_context.Order == null)

@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using web_api.Data;
 using web_api.Models;
 using web_api.Reponsitory.Abastract;
 
@@ -14,6 +16,19 @@ namespace web_api.Controllers
         public AccountController(IAccountService  repo) {
         accountRepo = repo;
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<List<ApplicationUser>> GetUsersAsync()
+        {
+            var result = await accountRepo.GetAllAccount();
+            if (result == null)
+            {
+                return new List<ApplicationUser>();
+            }
+            return result;
+        }
+
 
         [HttpPost("signUp")]
         public async Task<IActionResult> signUp(SignUpModel model)
