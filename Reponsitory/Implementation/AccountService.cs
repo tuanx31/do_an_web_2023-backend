@@ -33,6 +33,13 @@ namespace web_api.Reponsitory.Implementation
             return user;
         }
 
+        public async Task<int> getCountUser()
+        {
+            if(userManager == null)throw new ArgumentNullException();
+            return await userManager.Users.CountAsync();
+            
+        }
+
         public async Task<string> getIDbyMail(string email)
         {
             var user = await userManager.FindByEmailAsync(email);

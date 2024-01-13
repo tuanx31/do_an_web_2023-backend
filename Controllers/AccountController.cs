@@ -53,6 +53,19 @@ namespace web_api.Controllers
             }
             return Ok(result);
         }
+
+
+        [HttpGet("getCountUser")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> getCountUser()
+        {
+            var result = await accountRepo.getCountUser();
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            return Unauthorized();
+        }
         //[HttpPost("getId")]
         //public async Task<IActionResult> getIdbyEmail (string id)
         //{

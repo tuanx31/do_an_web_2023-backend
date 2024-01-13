@@ -157,7 +157,17 @@ namespace web_api.Controllers
 
             return NoContent();
         }
-
+        [HttpGet("getCountOrder")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> getCountOrder()
+        {
+            if (_context.Order == null)
+            {
+                return NotFound();
+            }
+            var countOrder = await _context.Order.CountAsync();
+            return Ok(countOrder);
+        }
         private bool OrderExists(int id)
         {
             return (_context.Order?.Any(e => e.Id == id)).GetValueOrDefault();

@@ -285,6 +285,19 @@ namespace web_api.Controllers
 
             return NoContent();
         }
+        [HttpGet("getcountProduct")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> getCountProduct()
+        {
+            if (_context.products == null)
+            {
+                return NotFound();
+            }
+            var count = await _context.products.CountAsync();
+            return Ok(count);
+        }
+
+
 
         private bool ProductExists(int id)
         {

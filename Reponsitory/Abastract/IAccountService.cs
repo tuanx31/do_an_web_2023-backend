@@ -10,5 +10,6 @@ namespace web_api.Reponsitory.Abastract
         public Task<Tuple<string , AccountModel>> SignInAsync (SignInModel model);
         public Task<string> getIDbyMail (string email);
         public Task<List<ApplicationUser>> GetAllAccount ();
+        public Task<int> getCountUser();
     }
 }
