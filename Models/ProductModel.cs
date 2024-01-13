@@ -48,5 +48,6 @@ namespace web_api.Models
     {
         public string img { get; set; }
         public string listImage { get; set; }
+        public DateTime createAt { get; set; }
     }
 }

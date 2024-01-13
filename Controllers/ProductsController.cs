@@ -143,6 +143,7 @@ namespace web_api.Controllers
                 quantity = model.quantity,
                 size = model.size,
                 img = model.img,
+                createAt = model.createAt,
             };
             if (model.ImageFile != null)
             {
@@ -160,9 +161,10 @@ namespace web_api.Controllers
                 stringArray = new ArraySegment<string>(stringArray, 0, stringArray.Length - 1).ToArray();
                 foreach (var item in stringArray)
                 {
-
+    
                     _fileService.DeleteImage(item);
                 }
+                product.listImage = "";
                 var fileResult = _fileService.SaveMultiImage(model.listImageFile);
                 if (fileResult.Item1 == 1)
                 {
@@ -201,7 +203,7 @@ namespace web_api.Controllers
         // POST: api/Products
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<ProductModel>> PostProduct([FromForm]ProductModel model)
         {
 
@@ -258,7 +260,7 @@ namespace web_api.Controllers
 
         // DELETE: api/Products/5
         [HttpDelete("{id}")]
-        [Authorize(Roles ="Admin")]
+        //[Authorize(Roles ="Admin")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             if (_context.products == null)
