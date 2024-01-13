@@ -30,6 +30,7 @@ namespace web_api.Models
         public int? id_category { get; set; }
         public int? id_trademark { get; set; }
 
+
         [NotMapped]
 
         public IFormFile? ImageFile { get; set; }
@@ -42,5 +43,10 @@ namespace web_api.Models
     {
         public string name { get; set; } = "";
         public string tenloai { get; set; }
+    }
+    public class editProductModel : ProductModel
+    {
+        public string img { get; set; }
+        public string listImage { get; set; }
     }
 }

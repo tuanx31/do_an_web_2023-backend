@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 using web_api.Data;
 using web_api.Models;
@@ -118,12 +119,11 @@ namespace web_api.Controllers
             }
             return Ok(result);
         }
-
         // PUT: api/Products/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> PutProduct([FromForm]int id, ProductModel model)
+        //[Authorize(Roles = "Admin")]
+        public async Task<ActionResult<editProductModel>> PutProduct(int id, [FromForm] editProductModel model)
         {
             var product = new Product
             {
@@ -138,16 +138,15 @@ namespace web_api.Controllers
                 consistent = model.consistent,
                 design = model.design,
                 id_trademark = model.id_trademark,
-                listImage = "",
+                listImage = model.listImage,
                 Material = model.Material,
                 quantity = model.quantity,
                 size = model.size,
-                createAt = DateTime.Now,
+                img = model.img,
             };
-
-            
             if (model.ImageFile != null)
             {
+                _fileService.DeleteImage(product.img); 
                 var fileResult = _fileService.SaveImage(model.ImageFile);
                 if (fileResult.Item1 == 1)
                 {
@@ -157,6 +156,13 @@ namespace web_api.Controllers
 
             if (model.listImageFile != null)
             {
+                string[] stringArray = product.listImage.Split('|');
+                stringArray = new ArraySegment<string>(stringArray, 0, stringArray.Length - 1).ToArray();
+                foreach (var item in stringArray)
+                {
+
+                    _fileService.DeleteImage(item);
+                }
                 var fileResult = _fileService.SaveMultiImage(model.listImageFile);
                 if (fileResult.Item1 == 1)
                 {
@@ -171,7 +177,6 @@ namespace web_api.Controllers
             {
                 return BadRequest();
             }
-
             _context.Entry(product).State = EntityState.Modified;
 
             try
@@ -190,7 +195,7 @@ namespace web_api.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok();
         }
 
         // POST: api/Products
@@ -242,7 +247,6 @@ namespace web_api.Controllers
                     {
                         product.listImage += item + "|";
                     }
-                    
                 }
             }
 
