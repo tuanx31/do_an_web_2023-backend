@@ -26,13 +26,21 @@ namespace web_api.Reponsitory.Implementation
             this.roleManager = roleManager; 
         }
 
-        public Task<List<ApplicationUser>> GetAllAccount()
+        public async Task<List<ApplicationUser>> GetAllAccount()
         {
             if (userManager == null) throw new ArgumentNullException();
-            var user = userManager.Users.ToListAsync();
+            var user = await userManager.Users.ToListAsync();
             return user;
         }
+        public async Task<IList<string>> GetRoleAsyncbyuser(ApplicationUser user)
+        {
+            return await userManager.GetRolesAsync(user);
+        }
 
+        public async Task<ApplicationUser> GetUserByEmail(string email)
+        {
+            return await userManager.FindByEmailAsync(email);
+        }
         public async Task<int> getCountUser()
         {
             if(userManager == null)throw new ArgumentNullException();
@@ -50,6 +58,7 @@ namespace web_api.Reponsitory.Implementation
             return user.Id;
             
         }
+
 
         public async Task<Tuple<string, AccountModel>> SignInAsync(SignInModel model)
         {
@@ -106,5 +115,6 @@ namespace web_api.Reponsitory.Implementation
             await userManager.AddToRoleAsync(user, "User");
             return result;
         }
+
     }
 }

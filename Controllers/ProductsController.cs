@@ -122,7 +122,7 @@ namespace web_api.Controllers
         // PUT: api/Products/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<editProductModel>> PutProduct(int id, [FromForm] editProductModel model)
         {
             var product = new Product
@@ -203,7 +203,7 @@ namespace web_api.Controllers
         // POST: api/Products
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ProductModel>> PostProduct([FromForm]ProductModel model)
         {
 
@@ -260,7 +260,7 @@ namespace web_api.Controllers
 
         // DELETE: api/Products/5
         [HttpDelete("{id}")]
-        //[Authorize(Roles ="Admin")]
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             if (_context.products == null)

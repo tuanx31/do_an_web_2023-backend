@@ -11,5 +11,8 @@ namespace web_api.Reponsitory.Abastract
         public Task<string> getIDbyMail (string email);
         public Task<List<ApplicationUser>> GetAllAccount ();
         public Task<int> getCountUser();
+        public Task<ApplicationUser> GetUserByEmail (string email);
+        public Task<IList<string>> GetRoleAsyncbyuser (ApplicationUser user);
+  
     }
 }

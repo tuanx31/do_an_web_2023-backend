@@ -18,7 +18,7 @@ namespace web_api.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<List<ApplicationUser>> GetUsersAsync()
         {
             var result = await accountRepo.GetAllAccount();
@@ -63,6 +63,17 @@ namespace web_api.Controllers
             if (result != null)
             {
                 return Ok(result);
+            }
+            return Unauthorized();
+        }
+
+        [HttpGet("getUser/{email}")]
+        public async Task<IActionResult> getUser(string email)
+        {
+            var user = await accountRepo.GetUserByEmail(email);
+            var role = await accountRepo.GetRoleAsyncbyuser(user);
+            if (user != null && role!=null) {
+            return Ok(new { user, role });
             }
             return Unauthorized();
         }
