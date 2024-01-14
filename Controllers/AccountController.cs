@@ -94,7 +94,7 @@ namespace web_api.Controllers
         }
 
         [HttpGet("getAllRole")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult> getAllRole()
         {
             var result = await accountRepo.getAllRole();
