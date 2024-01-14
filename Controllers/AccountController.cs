@@ -77,6 +77,19 @@ namespace web_api.Controllers
             }
             return Unauthorized();
         }
+
+        [HttpDelete("{email}")]
+        public async Task<IActionResult> deleteUSer(string email)
+        {
+            try
+            {
+                var result= await accountRepo.deleteUser(email);
+                return Ok(new {ms=result});
+            }catch (Exception ex)
+            {
+                return Unauthorized();
+            }
+        }
         //[HttpPost("getId")]
         //public async Task<IActionResult> getIdbyEmail (string id)
         //{

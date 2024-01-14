@@ -116,5 +116,11 @@ namespace web_api.Reponsitory.Implementation
             return result;
         }
 
+        public async Task<string> deleteUser(string email)
+        {
+            var user = await userManager.FindByEmailAsync(email);
+            await userManager.DeleteAsync( user);
+            return "Đã xóa user có email " + email;
+        }
     }
 }
