@@ -18,7 +18,7 @@ namespace web_api.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<List<ApplicationUser>> GetUsersAsync()
         {
             var result = await accountRepo.GetAllAccount();
@@ -68,6 +68,7 @@ namespace web_api.Controllers
         }
 
         [HttpGet("getUser/{email}")]
+
         public async Task<IActionResult> getUser(string email)
         {
             var user = await accountRepo.GetUserByEmail(email);
@@ -79,6 +80,7 @@ namespace web_api.Controllers
         }
 
         [HttpDelete("{email}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> deleteUSer(string email)
         {
             try
@@ -89,6 +91,27 @@ namespace web_api.Controllers
             {
                 return Unauthorized();
             }
+        }
+
+        [HttpGet("getAllRole")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> getAllRole()
+        {
+            var result = await accountRepo.getAllRole();
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+
+
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> editUser(string id ,AccountEditModel model)
+        {
+            var result = await accountRepo.editUser(id, model);
+            return Ok(result);
         }
         //[HttpPost("getId")]
         //public async Task<IActionResult> getIdbyEmail (string id)

@@ -119,8 +119,39 @@ namespace web_api.Reponsitory.Implementation
         public async Task<string> deleteUser(string email)
         {
             var user = await userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return string.Empty;
+            }
             await userManager.DeleteAsync( user);
             return "Đã xóa user có email " + email;
+        }
+
+        public async Task<List<IdentityRole>> getAllRole()
+        {
+            var res =  await roleManager.Roles.ToListAsync();
+            return res;
+        }
+
+        public async Task<string> editUser(string id, AccountEditModel acc)
+        {
+            try
+            {
+                var usert = await userManager.FindByIdAsync(id);
+                usert.PhoneNumber = acc.Phone;
+                usert.name = acc.Name;
+                usert.Email = acc.Email;
+                await userManager.UpdateAsync(usert);
+                await userManager.RemoveFromRoleAsync(usert, acc.RoleOld);
+                await userManager.AddToRoleAsync(usert, acc.Role);
+                return "đã thay đổi user có id " + id;
+
+            }
+            catch (Exception ex)
+            {
+                return "Lỗi";
+            }
+
         }
     }
 }

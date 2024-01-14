@@ -14,5 +14,7 @@ namespace web_api.Reponsitory.Abastract
         public Task<ApplicationUser> GetUserByEmail (string email);
         public Task<IList<string>> GetRoleAsyncbyuser (ApplicationUser user);
         public Task<string> deleteUser(string email);
+        public Task<List<IdentityRole>> getAllRole ();
+        public Task<string> editUser(string id, AccountEditModel acc);
     }
 }
